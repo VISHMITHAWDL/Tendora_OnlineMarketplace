@@ -11,12 +11,9 @@ const Navigationbar = () => {
   const dropdownRef = useRef(null);
 
   const productLinks = [
-    { to: '/electronics', label: 'Electronics' },
-    { to: '/fashion', label: 'Fashion' },
-    { to: '/home-and-garden', label: 'Home & Garden' },
-    { to: '/sport-and-outdoors', label: 'Sports & Outdoors' },
-    { to: '/beauty-and-health', label: 'Health & Beauty' },
-    { to: '/books-and-media', label: 'Books & Media' },
+    { to: '/kidssection', label: 'Kid Fashion' },
+    { to: '/menfashion', label: 'Men Fashion' },
+    { to: '/womenfashion', label: 'Women Fashion' },
     { to: '/special-deals', label: 'Special Deals' },
   ];
 

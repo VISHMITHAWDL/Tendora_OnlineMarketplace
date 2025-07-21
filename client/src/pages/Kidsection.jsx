@@ -1,12 +1,12 @@
 import React from 'react'
 import Productlist from '../components/common/Productlist'
 
-const Menfashion = () => {
+const Kidsection = () => {
   return (
-    <div>Menfashion
-      <Productlist categorytype="MEN" />
+    <div>Kidsection
+      <Productlist categorytype="KIDS" />
     </div>
   )
 }
 
-export default Menfashion
+export default Kidsection

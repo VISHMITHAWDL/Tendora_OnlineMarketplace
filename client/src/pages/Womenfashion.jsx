@@ -1,8 +1,10 @@
 import React from 'react'
-
+import Productlist from '../components/common/Productlist'
 const Womenfashion = () => {
   return (
-    <div>Womenfashion</div>
+    <div>Womenfashion
+      <Productlist categorytype="WOMEN" />
+    </div>
   )
 }
 
