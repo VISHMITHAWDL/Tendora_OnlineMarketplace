@@ -1,5 +1,5 @@
 import React from 'react'
-import Productlist from '../components/common/Productlist'
+import Productlist from '../../components/common/Productlist'
 
 const Menfashion = () => {
   return (

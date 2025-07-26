@@ -5,13 +5,14 @@ import Navigation from './components/Home_component/Navigationbar';
 import Footer from './components/common/Footer';
 
 import Home              from './pages/Home';
-import Kidsection   from './pages/Kidsection';
-import Menfashion        from './pages/Menfashion';
-import Womenfashion      from './pages/Womenfashion';
-import Specialdeals      from './pages/Specialdeals';
+import Kidsection   from './pages/productpages/Kidsection';
+import Menfashion        from './pages/productpages/Menfashion';
+import Womenfashion      from './pages/productpages/Womenfashion';
+import Specialdeals      from './pages/productpages/Specialdeals';
 import Notfound          from './pages/Notfound';
 import About            from './pages/About';
 import Contact          from './pages/Contact';
+import ProductDetail from './pages/productpages/ProductDetail';
 
 function RootLayout() {
   return (
@@ -38,6 +39,8 @@ const Routes = createBrowserRouter([
       { path: '*',                   element: <Notfound /> },
       { path: '/about',              element: <About /> },
       { path: '/contact',            element: <Contact /> },
+      { path: '/productdetail/:id',       element: <ProductDetail /> },
+      
     ],
   },
 ]);

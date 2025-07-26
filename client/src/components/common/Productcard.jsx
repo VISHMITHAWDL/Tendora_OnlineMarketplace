@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Star, ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // ProductCard Component
 const ProductCard = ({ product }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl" style={{ backgroundColor: '#EDEDED' }}>
       <div className="relative">
-        <img 
+        <Link to={`/productdetail/${product.id}`}><img 
           src={product.image} 
           alt={product.name}
           className="w-full h-48 object-cover"
-        />
+        /></Link>
         <div className="absolute top-2 right-2 px-2 py-1 rounded-full text-white text-xs font-bold" style={{ backgroundColor: '#DA0037' }}>
           {product.discount}% OFF
         </div>
