@@ -20,7 +20,7 @@ public class Productdto {
     private BigDecimal price;
     private String brand;
     private boolean isNewArrival;
-    //private Float rating;
+    private Float rating;
     private UUID categoryId;
     //private String thumbnail;
     //private String slug;

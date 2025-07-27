@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "category_type")
@@ -30,6 +32,7 @@ public class CategoryType {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private Category category;
 }
 

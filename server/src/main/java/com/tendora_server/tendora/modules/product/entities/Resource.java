@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 import com.tendora_server.tendora.modules.product.entities.Product;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -38,5 +38,6 @@ public class Resource {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonIgnore
     private Product product;
 }

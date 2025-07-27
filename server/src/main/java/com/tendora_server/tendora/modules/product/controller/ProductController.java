@@ -7,15 +7,12 @@ import com.tendora_server.tendora.modules.product.repository.ProductRepository;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.UUID;
 
 import com.tendora_server.tendora.modules.product.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-
-
-
 
 
 @RestController
@@ -30,8 +27,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(){
-        List<Product> productList = productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam (required = false) UUID categoryId,@RequestParam (required = false) UUID typeId) {
+        List<Product> productList = productService.getAllProducts(categoryId, typeId);
         return new ResponseEntity<>(productList,HttpStatus.OK);
     }
 
