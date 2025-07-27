@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import java.util.UUID;
-import com.tendora.tendora_server.modules.product.entities.Category;
 
 
 @Entity

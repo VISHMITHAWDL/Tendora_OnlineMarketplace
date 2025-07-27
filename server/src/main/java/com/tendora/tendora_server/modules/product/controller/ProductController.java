@@ -1,26 +1,22 @@
 package com.tendora.tendora_server.modules.product.controller;
 
 import com.tendora.tendora_server.modules.product.dto.Productdto;
-import com.tendora.tendora_server.modules.product.entities.Product;
-import com.tendora.tendora_server.modules.product.entities.Category;
-import com.tendora.tendora_server.modules.product.entities.ProductVariant;
-import com.tendora.tendora_server.modules.product.entities.Resource;
-import com.tendora.tendora_server.modules.product.entities.CategoryType;
+import com.tendora.tendora_server.modules.product.entities.*;
+import com.tendora.tendora_server.modules.product.repository.ProductRepository;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import com.tendora.tendora_server.modules.product.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Product Controller", description = "Handles product APIs")
+
+
 
 @RestController
 @RequestMapping("/api/products")    
@@ -40,7 +36,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public Productdto createProduct(@RequestBody Productdto product){
+    public ResponseEntity<Product> createProduct(@RequestBody Productdto productdto){
+        Product product = productService.addProduct(productdto);
         return product;
     }
-}
+} 

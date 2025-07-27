@@ -9,10 +9,6 @@ import java.util.UUID;
 import java.util.List;
 import com.fasterxml.jackson.annotation.*;
 
-import com.tendora.tendora_server.modules.product.entities.Resource; 
-import com.tendora.tendora_server.modules.product.entities.Category;
-import com.tendora.tendora_server.modules.product.entities.CategoryType;
-
 @Entity
 @Table(name = "products")
 @Data
@@ -70,14 +66,14 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Resource> resources;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new java.util.Date();
-        updatedAt = createdAt;
-    }
+    // @PrePersist
+    // protected void onCreate() {
+    //     createdAt = new java.util.Date();
+    //     updatedAt = createdAt;
+    // }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new java.util.Date();
-    }
+    // @PreUpdate
+    // protected void onUpdate() {
+    //     updatedAt = new java.util.Date();
+    // }
 }

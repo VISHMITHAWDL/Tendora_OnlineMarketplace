@@ -1,13 +1,12 @@
 package com.tendora.tendora_server.modules.product.entities;
 
 import java.util.UUID;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.tendora.tendora_server.modules.product.entities.Product;
+
 
 
 @Entity

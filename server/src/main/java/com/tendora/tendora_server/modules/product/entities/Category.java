@@ -8,7 +8,6 @@ import java.util.UUID;
 import jakarta.persistence.*;
 import java.util.List;
 
-import com.tendora.tendora_server.modules.product.entities.CategoryType;
 
 @Entity
 @Table(name = "categories")
