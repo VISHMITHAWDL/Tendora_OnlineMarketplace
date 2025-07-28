@@ -2,10 +2,10 @@ package com.tendora_server.tendora.modules.product.controller;
 
 import com.tendora_server.tendora.modules.product.dto.Productdto;
 import com.tendora_server.tendora.modules.product.entities.*;
-import com.tendora_server.tendora.modules.product.repository.ProductRepository;
+
 
 import org.springframework.web.bind.annotation.*;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.UUID;
 
