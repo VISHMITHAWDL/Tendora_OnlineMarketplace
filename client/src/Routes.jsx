@@ -13,13 +13,21 @@ import Notfound          from './pages/Notfound';
 import About            from './pages/About';
 import Contact          from './pages/Contact';
 import ProductDetail from './pages/productpages/ProductDetail';
+import Spinner from './components/common/Spinner';
+import { useSelector } from 'react-redux';
 
 function RootLayout() {
+
+  const isLoading = useSelector((state) => state?.commonState?.loading);
+
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
       <main className="flex-1">
+        {/* The Outlet component will render the matched child route */}
         <Outlet />
+        {isLoading && <Spinner />}
       </main>
       <Footer />
     </div>

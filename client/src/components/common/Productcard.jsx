@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 // ProductCard Component
 const ProductCard = ({ product }) => {
+
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl" style={{ backgroundColor: '#EDEDED' }}>
       <div className="relative">
@@ -42,19 +44,11 @@ const ProductCard = ({ product }) => {
             <span className="text-xl font-bold" style={{ color: '#DA0037' }}>
               ${product.price}
             </span>
-            <span className="text-sm line-through" style={{ color: '#444444' }}>
-              ${product.originalPrice}
+            <span className="text-sm" style={{ color: '#444444' }}>
+              {product.brand}
             </span>
           </div>
         </div>
-        
-        {/* <button 
-          className="w-full py-2 px-4 rounded-lg font-semibold text-white transition-all duration-200 hover:opacity-90 flex items-center justify-center space-x-2"
-          style={{ backgroundColor: '#171717' }}
-        >
-          <ShoppingCart size={16} />
-          <span>Add to Cart</span>
-        </button> */}
       </div>
     </div>
   );
