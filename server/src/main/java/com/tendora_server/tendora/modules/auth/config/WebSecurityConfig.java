@@ -9,11 +9,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.tendora_server.tendora.common.config.JwtTokenHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
 
 
@@ -25,23 +27,41 @@ public class WebSecurityConfig{
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private JwtTokenHelper jwtTokenHelper;
+
+    private final String[] publicApis = {
+            "/api/products/**",
+            "/api/category/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/api/auth/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.GET ,"/api/products/**", "/api/category/**").permitAll() 
                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenHelper,userDetailsService),UsernamePasswordAuthenticationFilter.class);
            return http.build(); // Disable CSRF for simplicity, enable in production with proper CSRF token handling
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(publicApis);
     }
 
   
    
     @Bean
     public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider deoauthenticationProvider = new DaoAuthenticationProvider();
-        deoauthenticationProvider.setUserDetailsService(userDetailsService) ;
-        deoauthenticationProvider.setPasswordEncoder(passwordEncoder()); 
-        return new ProviderManager(deoauthenticationProvider);
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(daoAuthenticationProvider);
     }
 
     @Bean

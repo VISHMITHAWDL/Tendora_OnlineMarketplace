@@ -2,7 +2,6 @@ package com.tendora_server.tendora.modules.auth.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerErrorException;
-
 import com.tendora_server.tendora.modules.auth.entities.User;
 import com.tendora_server.tendora.modules.auth.helper.VerificationCodeGenerator;
 import com.tendora_server.tendora.modules.auth.authdto.RegistrationRequest;
@@ -10,6 +9,8 @@ import com.tendora_server.tendora.modules.auth.authdto.RegistrationResponse;
 import com.tendora_server.tendora.modules.auth.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.tendora_server.tendora.modules.auth.service.AuthorityService;
+
 
 @Service
 public class RegistrationService {
@@ -22,6 +23,9 @@ public class RegistrationService {
 
     @Autowired
     private AuthorityService authorityService;
+
+    @Autowired
+    private EmailService emailService;
 
     public RegistrationResponse createUser(RegistrationRequest registrationRequest) {
 
@@ -46,6 +50,7 @@ public class RegistrationService {
         user.setVerificationCode(code);
         user.setAuthorities(authorityService.getUserAuthority());
         userDetailsRepository.save(user);
+        emailService.sendMail(user);
 
 
         return RegistrationResponse.builder()
@@ -60,6 +65,14 @@ public class RegistrationService {
         // Return a server error response
         throw new ServerErrorException(e.getMessage(),e.getCause());
       }
+    }
+
+
+    public void verifyUser(String user) {
+        User existingUser = userDetailsRepository.findByEmail(user);
+        existingUser.setEnabled(true);
+        userDetailsRepository.save(existingUser);
+   
     }
 
 
