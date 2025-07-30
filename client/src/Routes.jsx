@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import LoginHeader from './components/login_component/Head';
 import Login from './pages/Userpages/Login';
 import Register from './pages/Userpages/Register';
+import OAuth2LoginCallback from './pages/Userpages/Oauth2LoginCallback';
 
 
 function RootLayout() {
@@ -80,6 +81,10 @@ const Routes = createBrowserRouter([
       { path: '/productdetail/:id',       element: <ProductDetail /> },
     ],
   },
+  {
+    path: '/oauth2/callback',
+    element: <OAuth2LoginCallback />
+  }
 ]);
 
 export default Routes;

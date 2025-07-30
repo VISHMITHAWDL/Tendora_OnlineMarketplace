@@ -16,6 +16,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 
 
@@ -44,7 +45,10 @@ public class WebSecurityConfig{
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.GET ,"/api/products/**", "/api/category/**").permitAll() 
                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
+                .requestMatchers("oauth2/success").permitAll()
                 .anyRequest().authenticated())
+                .oauth2Login((oauth2login)->oauth2login.defaultSuccessUrl("/oauth2/success"))
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenHelper,userDetailsService),UsernamePasswordAuthenticationFilter.class);
            return http.build(); // Disable CSRF for simplicity, enable in production with proper CSRF token handling
     }

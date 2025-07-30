@@ -5,9 +5,16 @@ import { useNavigate } from 'react-router-dom'; // Uncomment when implementing r
 import { setLoading } from '../../store/features/Common';
 import { loginAPI } from '../../api/Authentications/Authentications';
 import { saveToken } from '../../utils/Jwt_helper';
+import { API_BASE_URL } from '../../api/const';
 
 
 const Login = () => {
+
+
+   const handleClick = useCallback(() => {
+      window.location.href = API_BASE_URL + '/oauth2/authorization/google';
+   }, []);
+
   const [formData, setFormData] = useState({
     userName: '',
     password: ''
@@ -158,7 +165,7 @@ const Login = () => {
                 
                 <button
                     type="button"
-                    onClick={() => console.log('Google sign-in')}
+                    onClick={handleClick}
                     className="w-full flex items-center justify-center gap-3 bg-[#252525] text-white py-3 px-4 rounded-md font-medium border border-[#444444] hover:bg-[#333333] transition duration-300"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
