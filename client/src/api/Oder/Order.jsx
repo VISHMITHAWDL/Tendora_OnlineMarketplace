@@ -1,0 +1,20 @@
+import axios from 'axios';  
+import { API_BASE_URL } from '../const';
+import { getHeaders } from '../const';
+
+
+
+export const placeOrderAPI = async (data)=>{
+    const url = API_BASE_URL + '/api/order';
+    try{
+        const response = await axios(url,{
+            method:"POST",
+            data:data,
+            headers:getHeaders()
+        });
+        return response?.data;
+    }
+    catch(err){
+        throw new Error(err);
+    }
+}

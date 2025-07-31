@@ -53,12 +53,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     } 
                 }
             }
-            filterChain.doFilter(request, response);
-
         }catch(Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
-            return;
+            System.err.println("JWT Filter Error: " + e.getMessage());
+            e.printStackTrace(); // This will show you the full stack trace
+            SecurityContextHolder.clearContext();
         }
+        
+        // Always continue the filter chain, even if JWT authentication fails
+        filterChain.doFilter(request, response);
     
     }
  

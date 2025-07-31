@@ -23,7 +23,7 @@ public class RESTAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // Write JSON error response
         String jsonResponse = "{"
                 + "\"error\": \"Unauthorized\","
-                + "\"message\": \"Authentication required to access this resource\","
+                + "\"message\": \"Authentication required to access this resource lol\","
                 + "\"status\": 401,"
                 + "\"path\": \"" + request.getRequestURI() + "\""
                 + "}";

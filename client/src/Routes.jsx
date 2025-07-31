@@ -24,6 +24,10 @@ import OAuth2LoginCallback from './pages/Userpages/Oauth2LoginCallback';
 import Cartitem from './pages/Cart/Cartitem';
 import Account  from './pages/Userpages/Account';
 import Protectedroute from './components/Protected_Routes/Protectedroute';
+import Checkout from './pages/Payement/Checkout';
+import ConfirmPayment from './pages/Payement/ConfirmPayment';
+
+
 
 
 function RootLayout() {
@@ -84,6 +88,9 @@ const Routes = createBrowserRouter([
       { path: '/productdetail/:id',       element: <ProductDetail /> },
       { path: '/cart', element: <Cartitem /> },
       { path: '/account', element: <Protectedroute><Account /></Protectedroute> },
+      { path: '/checkout', element: <Protectedroute><Checkout /></Protectedroute> },
+      { path: '/confirmpayment', element: <Protectedroute><ConfirmPayment /></Protectedroute> },
+
     ],
   },
   {
