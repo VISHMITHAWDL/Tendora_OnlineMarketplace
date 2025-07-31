@@ -40,6 +40,7 @@ public class UserDetailController {
                 .email(user.getEmail())
                 .id(user.getId())
                 .phoneNumber(user.getPhoneNumber())
+                .addressList(user.getAddressList())
                 .authorityList(user.getAuthorities().toArray()).build();
 
         return new ResponseEntity<>(userDetailsDto, HttpStatus.OK);

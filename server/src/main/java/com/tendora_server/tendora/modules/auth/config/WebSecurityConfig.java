@@ -16,7 +16,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 
 
@@ -31,6 +31,9 @@ public class WebSecurityConfig{
     @Autowired
     private JwtTokenHelper jwtTokenHelper;
 
+    @Autowired
+    private RESTAuthenticationEntryPoint restAuthenticationEntryPoint;
+
     private final String[] publicApis = {
             "/api/products/**",
             "/api/category/**",
@@ -42,13 +45,14 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(HttpMethod.GET ,"/api/products/**", "/api/category/**").permitAll() 
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers(HttpMethod.GET ,"/api/products/**", "/api/category/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
                 .requestMatchers("oauth2/success").permitAll()
                 .anyRequest().authenticated())
-                .oauth2Login((oauth2login)->oauth2login.defaultSuccessUrl("/oauth2/success"))
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .oauth2Login((oauth2login)-> oauth2login.defaultSuccessUrl("/oauth2/success").loginPage("/oauth2/authorization/google"))
+                .exceptionHandling((exception)-> exception.authenticationEntryPoint(restAuthenticationEntryPoint))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenHelper,userDetailsService),UsernamePasswordAuthenticationFilter.class);
            return http.build(); // Disable CSRF for simplicity, enable in production with proper CSRF token handling
     }

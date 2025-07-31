@@ -21,6 +21,9 @@ import LoginHeader from './components/login_component/Head';
 import Login from './pages/Userpages/Login';
 import Register from './pages/Userpages/Register';
 import OAuth2LoginCallback from './pages/Userpages/Oauth2LoginCallback';
+import Cartitem from './pages/Cart/Cartitem';
+import Account  from './pages/Userpages/Account';
+import Protectedroute from './components/Protected_Routes/Protectedroute';
 
 
 function RootLayout() {
@@ -64,7 +67,7 @@ const Routes = createBrowserRouter([
     element: <LoginLayout />,
     children: [
       { path: '/login', element: <Login /> },
-      { path: '/register', element: <Register /> },
+      { path: '/register', element:<Register /> },
     ],
   },
   {
@@ -79,6 +82,8 @@ const Routes = createBrowserRouter([
       { path: '/about',              element: <About /> },
       { path: '/contact',            element: <Contact /> },
       { path: '/productdetail/:id',       element: <ProductDetail /> },
+      { path: '/cart', element: <Cartitem /> },
+      { path: '/account', element: <Protectedroute><Account /></Protectedroute> },
     ],
   },
   {

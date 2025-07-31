@@ -18,4 +18,6 @@ public interface ProductService {
     public Productdto getProductById(UUID id);
 
     public Product updateProduct(Productdto productdto);
+
+    Product fetchProductById(UUID uuid) throws Exception;
 }

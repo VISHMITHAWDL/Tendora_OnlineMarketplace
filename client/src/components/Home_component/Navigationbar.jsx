@@ -1,11 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Search, ShoppingCart, User, Heart, Menu, X, ChevronDown } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { countCartItems } from '../../store/features/Cart';
 
 const Navigationbar = () => {
+
+
+
+  const cartLength = useSelector(countCartItems);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [cartCount, setCartCount] = useState(2);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -16,7 +21,7 @@ const Navigationbar = () => {
     { to: '/womenfashion', label: 'Women Fashion' },
     { to: '/special-deals', label: 'Special Deals' },
   ];
-
+  const navigate = useNavigate();
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -24,7 +29,7 @@ const Navigationbar = () => {
         setIsDropdownOpen(false);
       }
     };
-
+    
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
         setIsDropdownOpen(false);
@@ -145,18 +150,21 @@ const Navigationbar = () => {
               </button>
               
               <button 
+                onClick={() => navigate('/cart')}
                 className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300 relative"
                 aria-label="Shopping Cart"
               >
                 <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
+
+                {cartLength > 0 && (
                   <span className="absolute -top-1 -right-1 bg-[#DA0037] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                    {cartCount}
+                    {cartLength}
                   </span>
                 )}
               </button>
               
               <button 
+                onClick={() => navigate('/account')}
                 className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300"
                 aria-label="User Account"
               >
@@ -290,9 +298,9 @@ const Navigationbar = () => {
                     aria-label="Shopping Cart"
                   >
                     <ShoppingCart className="h-5 w-5" />
-                    {cartCount > 0 && (
+                    {cartLength > 0 && (
                       <span className="absolute -top-1 -right-1 bg-[#DA0037] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
-                        {cartCount}
+                        {cartLength}
                       </span>
                     )}
                   </button>

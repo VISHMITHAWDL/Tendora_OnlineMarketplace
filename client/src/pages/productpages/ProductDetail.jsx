@@ -1,4 +1,4 @@
-import React, { use, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Heart, Share2, Truck, Shield, RotateCcw, Star } from 'lucide-react'
 import Breadcum from '../../components/common/Breadcum'
@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux'
 import { setLoading } from '../../store/features/Common'
 import { useSelector } from 'react-redux'
 import ProductCard from '../../components/common/Productcard'
+import { addItemToCartAction } from '../../store/action/cartAction'
+
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
@@ -19,6 +21,7 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [error, setError] = useState('');
   const categories = useSelector((state) => state?.categoryState?.categories);
 
   useEffect(() => {
@@ -37,6 +40,8 @@ const ProductDetail = () => {
 
 
   useEffect(() =>{
+    if(!product?.categoryId || !product?.categoryTypeId) return;
+    
     getAllProducts(product?.categoryId, product?.categoryTypeId)
       .then((data) => {
 
@@ -47,7 +52,7 @@ const ProductDetail = () => {
       .catch((error) => {
         console.error("Error fetching related products:", error);
       });
-  }, [product?.categoryId, product?.categoryTypeId]);
+  }, [product?.categoryId, product?.categoryTypeId, product?.id]);
 
 
   const productCategory = useMemo(() => {
@@ -55,10 +60,48 @@ const ProductDetail = () => {
     return categories.find((category) => String(category.id) === String(product.categoryId));
   }, [categories, product?.categoryId]);
 
+  const addItemToCart = useCallback(()=>{
+    // Clear any previous errors
+    setError('');
+    
+    console.log("size ", selectedSize);
+    if(!selectedSize){
+      setError('Please select size');
+      return;
+    }
+    
+    const selectedVariant = product?.variants?.filter((variant)=> variant?.size === selectedSize)?.[0];
+    console.log("selected ", selectedVariant);
+    
+    if(!selectedVariant){
+      setError('Selected size is not available');
+      return;
+    }
+    
+    if(selectedVariant?.stockQuantity < quantity){
+      setError(`Only ${selectedVariant.stockQuantity} items available in stock`);
+      return;
+    }
+    
+    if(selectedVariant?.stockQuantity > 0){
+      dispatch(addItemToCartAction({
+        productId: product?.id,
+        thumbnail: product?.thumbnail,
+        name: product?.name,
+        variant: selectedVariant,
+        quantity: quantity,
+        subTotal: product?.price * quantity,
+        price: product?.price,
+      }));
+      
+      // Success feedback (optional)
+      console.log("Item added to cart successfully");
+    }
+    else{
+      setError('Out of Stock');
+    }
 
-
-  const productType= productCategory?.categoryTypes?.find((item)=> item.id === product?.categoryTypeId);
-
+  },[dispatch, product, selectedSize, quantity, setError]);
 
 
 
@@ -83,23 +126,6 @@ const ProductDetail = () => {
       </div>
     );
   }
-
-  const handleAddToCart = () => {
-    // This would be used when connecting to a cart context/state manager
-    const cartItem = {
-      id: product.id,
-      title: product.name || product.title,
-      price: product.price,
-      color: selectedColor,
-      size: selectedSize,
-      quantity: quantity,
-      thumbnail: product.thumbnail
-    };
-    
-    console.log("Adding to cart:", cartItem);
-    alert(`Added ${quantity} ${product.name || product.title} to cart!`);
-    // Add your cart logic here when you implement a cart context or state manager
-  };
 
   const discountedPrice = product.discount 
     ? (product.price - (product.price * product.discount / 100)).toFixed(2)
@@ -261,7 +287,10 @@ const ProductDetail = () => {
                 {sizes.map((size) => (
                   <button
                     key={size}
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => {
+                      setSelectedSize(size);
+                      setError(''); // Clear error when size is selected
+                    }}
                     className={`py-3 px-2 text-sm font-medium rounded-xl focus:outline-none transition-all duration-300 hover:scale-105 ${
                       selectedSize === size 
                         ? 'bg-[#DA0037] text-white shadow-lg' 
@@ -293,12 +322,19 @@ const ProductDetail = () => {
               </div>
               
               <button 
-                onClick={handleAddToCart}
+                onClick={addItemToCart}
                 className="flex-1 bg-[#DA0037] text-white py-3 px-6 rounded-xl font-bold hover:bg-[#b1002c] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#DA0037] focus:ring-offset-2 focus:ring-offset-[#0D1117] transition-all duration-300 shadow-xl"
               >
                 Add to Cart
               </button>
             </div>
+            
+            {/* Error Display */}
+            {error && (
+              <div className="mt-4 p-3 bg-red-500/20 border border-red-500/30 rounded-xl">
+                <p className="text-red-400 text-sm font-medium">{error}</p>
+              </div>
+            )}
             
             {/* Features */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-[#444444]/30">

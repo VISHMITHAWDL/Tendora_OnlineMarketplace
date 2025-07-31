@@ -11,6 +11,8 @@ import com.tendora_server.tendora.modules.product.entities.Product;
 import com.tendora_server.tendora.modules.product.entities.ProductVariant;
 import com.tendora_server.tendora.modules.product.dto.Productdto;
 import com.tendora_server.tendora.modules.product.repository.ProductRepository;
+
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -95,6 +97,11 @@ public class ProductServiceimpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productdto.getId()));
         
         return productRepository.save(productMapper.mapToProductEntity(productdto));
+    }
+
+    @Override
+    public Product fetchProductById(UUID id) throws Exception {
+        return productRepository.findById(id).orElseThrow(BadRequestException::new);
     }
     
 }
