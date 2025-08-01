@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Herosection from "../components/Home_component/Herosection";
 import Productcarousel from "../components/common/Productcarousel";
 import Categories from "../components/Home_component/Catogeries";
-import fetchCategories from "../api/fetchCategories";
+import fetchCategories from "../api/Porducts/fetchCategories";
 import { useDispatch } from "react-redux";
 import { loadCategories } from "../store/features/Category";
 import { setLoading } from "../store/features/Common";

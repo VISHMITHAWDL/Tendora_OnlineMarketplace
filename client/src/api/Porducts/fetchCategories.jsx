@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { API_BASE_URL, API_URLS } from './const'
+import { API_BASE_URL, API_URLS } from '../const'
 
 const fetchCategories = async () => {
     const url = API_BASE_URL + API_URLS.Get_CATEGORIES;

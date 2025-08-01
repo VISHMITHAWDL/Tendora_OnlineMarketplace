@@ -1,5 +1,5 @@
 import React from 'react'
-import { API_BASE_URL, API_URLS } from './const'
+import { API_BASE_URL, API_URLS } from '../const'
 import axios from 'axios'
 
 export const getAllProducts = async (id, typeId) => {

@@ -5,7 +5,7 @@ import Filter from '../Productfilter/Filter';
 import Pricefilter from '../Productfilter/Pricefilter';
 import Colorfilter from '../Productfilter/Colorfilter';
 import ProductCard from './Productcard';
-import { getAllProducts } from '../../api/fetchProduct';
+import { getAllProducts } from '../../api/Porducts/fetchProduct';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../store/features/Common';
 

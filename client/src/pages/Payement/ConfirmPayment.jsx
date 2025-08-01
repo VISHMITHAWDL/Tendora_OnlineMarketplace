@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import SpinnerDemo from '../../components/common/Spinner';
 import { setLoading } from '../../store/features/Common';
+import { confirmPaymentAPI } from '../../api/Oder/Order';
 
 
 
@@ -24,13 +25,13 @@ const ConfirmPayment = () => {
         const paymentIntent = query.get('payment_intent');
         if(redirectStatus === 'succeeded'){
             dispatch(setLoading(true));
-            dispatch(clearCart());
+            //dispatch(clearCart());
             confirmPaymentAPI({
                 paymentIntent: paymentIntent,
                 status:paymentIntent
             }).then(res=>{
                 const orderId = res?.orderId;
-                navigate(`/orderConfirmed?orderId=${orderId}`)
+                navigate(`/order-confirmed?orderId=${orderId}`)
             }).catch(err=>{
                 setErrorMessage("Something went wrong!");
             }).finally(()=>{

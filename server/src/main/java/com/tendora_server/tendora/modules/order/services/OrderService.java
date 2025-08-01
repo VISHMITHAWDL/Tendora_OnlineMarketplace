@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.List;
 
+import com.tendora_server.tendora.modules.order.dto.OrderDetails;
+import com.tendora_server.tendora.modules.order.dto.OrderItemDetail;
 import com.tendora_server.tendora.modules.order.dto.OrderRequest;
 import com.tendora_server.tendora.modules.order.dto.OrderResponse;
 import com.tendora_server.tendora.modules.order.repository.OrderRepository;
@@ -130,7 +132,50 @@ public class OrderService {
         }
     }
 
+    public List<OrderDetails> getOrdersByUser(String name) {
+            User user = (User) userDetailsService.loadUserByUsername(name);
+            List<Order> orders = orderRepository.findByUser(user);
+            return orders.stream().map(order -> {
+                return OrderDetails.builder()
+                        .id(order.getId())
+                        .orderDate(order.getOrderDate())
+                        .orderStatus(order.getOrderStatus())
+                        .shipmentNumber(order.getShipmentTrackingNumber())
+                        .address(order.getAddress())
+                        .totalAmount(order.getTotalAmount())
+                        .orderItemList(getItemDetails(order.getOrderItemList()))
+                        .expectedDeliveryDate(order.getExpectedDeliveryDate())
+                        .build();
+            }).toList();
 
+        }
 
+    private List<OrderItemDetail> getItemDetails(List<OrderItem> orderItemList) {
 
+        return orderItemList.stream().map(orderItem -> {
+            return OrderItemDetail.builder()
+                    .id(orderItem.getId())
+                    .itemPrice(orderItem.getItemPrice())
+                    .product(orderItem.getProduct())
+                    .productVariantId(orderItem.getProductVariantId())
+                    .quantity(orderItem.getQuantity())
+                    .build();
+        }).toList();
+    
+    }
+    
+    public void cancelOrder(UUID id, Principal principal) {
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        Order order = orderRepository.findById(id).get();
+        if(null != order && order.getUser().getId().equals(user.getId())){
+            order.setOrderStatus(OrderStatus.CANCELLED);
+            //logic to refund amount
+            orderRepository.save(order);
+        }
+        else{
+            new RuntimeException("Invalid request");
+        }
+
+    }
+    
 }

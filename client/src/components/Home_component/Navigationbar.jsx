@@ -164,7 +164,7 @@ const Navigationbar = () => {
               </button>
               
               <button 
-                onClick={() => navigate('/account')}
+                onClick={() => navigate('/account/profile')}
                 className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300"
                 aria-label="User Account"
               >

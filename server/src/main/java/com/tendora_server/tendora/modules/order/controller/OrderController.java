@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Map;
-//import com.tendora_server.tendora.modules.order.dto.OrderDetails;
 import com.tendora_server.tendora.modules.order.dto.OrderRequest;
 import com.tendora_server.tendora.modules.order.dto.OrderResponse;
 import com.tendora_server.tendora.modules.order.entities.Order;
 import com.tendora_server.tendora.modules.order.services.OrderService;
-
+import com.tendora_server.tendora.modules.order.dto.OrderDetails;
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
@@ -28,7 +27,7 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-
+    
 
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody OrderRequest orderRequest, Principal principal) throws Exception {
@@ -44,16 +43,16 @@ public class OrderController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    // @PostMapping("/cancel/{id}")
-    // public ResponseEntity<?> cancelOrder(@PathVariable UUID id,Principal principal){
-    //     orderService.cancelOrder(id,principal);
-    //     return new ResponseEntity<>(HttpStatus.OK);
-    // }
+    @PostMapping("/cancel/{id}")
+    public ResponseEntity<?> cancelOrder(@PathVariable UUID id,Principal principal){
+        orderService.cancelOrder(id,principal);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-    // @GetMapping("/user")
-    // public ResponseEntity<List<OrderDetails>> getOrderByUser(Principal principal) {
-    //     List<OrderDetails> orders = orderService.getOrdersByUser(principal.getName());
-    //     return new ResponseEntity<>(orders, HttpStatus.OK);
-    // }
+    @GetMapping("/user")
+    public ResponseEntity<List<OrderDetails>> getOrderByUser(Principal principal) {
+        List<OrderDetails> orders = orderService.getOrdersByUser(principal.getName());
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
 }

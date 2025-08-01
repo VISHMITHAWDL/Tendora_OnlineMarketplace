@@ -26,8 +26,10 @@ import Account  from './pages/Userpages/Account';
 import Protectedroute from './components/Protected_Routes/Protectedroute';
 import Checkout from './pages/Payement/Checkout';
 import ConfirmPayment from './pages/Payement/ConfirmPayment';
-
-
+import OrderConfirmed from './pages/Oderpages/OrderConfirmed';
+import Profile from './pages/Userpages/Profile';
+import OrderInfo from './pages/Userpages/OrderInfo';
+import Settings from './pages/Userpages/Settings';
 
 
 function RootLayout() {
@@ -87,15 +89,38 @@ const Routes = createBrowserRouter([
       { path: '/contact',            element: <Contact /> },
       { path: '/productdetail/:id',       element: <ProductDetail /> },
       { path: '/cart', element: <Cartitem /> },
-      { path: '/account', element: <Protectedroute><Account /></Protectedroute> },
+      { path: '/account/',
+        element: <Protectedroute><Account /></Protectedroute>,
+        children:[
+            {
+              path: 'orderhistory',
+              element:<Protectedroute><OrderInfo /></Protectedroute>
+            },
+            {
+              path: 'profile',
+              element: <Protectedroute><Profile /></Protectedroute>
+            },
+            {
+              path: 'settings',
+              element: <Protectedroute><Settings /></Protectedroute>
+            }
+        ]
+      },
       { path: '/checkout', element: <Protectedroute><Checkout /></Protectedroute> },
-      { path: '/confirmpayment', element: <Protectedroute><ConfirmPayment /></Protectedroute> },
-
+        {
+    path: '/order-confirmed',
+    element: <OrderConfirmed />
+  },
     ],
   },
   {
     path: '/oauth2/callback',
     element: <OAuth2LoginCallback />
+  },
+  
+  { 
+    path: '/confirmpayment',
+    element: <ConfirmPayment /> 
   }
 ]);
 
