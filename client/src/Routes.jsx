@@ -30,6 +30,7 @@ import OrderConfirmed from './pages/Oderpages/OrderConfirmed';
 import Profile from './pages/Userpages/Profile';
 import OrderInfo from './pages/Userpages/OrderInfo';
 import Settings from './pages/Userpages/Settings';
+import Adminpanel from './pages/AdminPanel/Adminpanel';
 
 
 function RootLayout() {
@@ -121,6 +122,10 @@ const Routes = createBrowserRouter([
   { 
     path: '/confirmpayment',
     element: <ConfirmPayment /> 
+  },
+  {
+    path: '/admin/*',
+    element: <Protectedroute><Adminpanel /></Protectedroute>
   }
 ]);
 

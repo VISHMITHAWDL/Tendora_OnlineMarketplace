@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -13,14 +14,20 @@ import com.tendora_server.tendora.common.config.JwtTokenHelper;
 import com.tendora_server.tendora.modules.auth.authdto.LoginRequest;
 import com.tendora_server.tendora.modules.auth.authdto.RegistrationResponse;
 import com.tendora_server.tendora.modules.auth.authdto.UserToken;
+import com.tendora_server.tendora.modules.auth.entities.Authority;
 import com.tendora_server.tendora.modules.auth.entities.User;
+import com.tendora_server.tendora.modules.auth.repository.AuthorityRepository;
+import com.tendora_server.tendora.modules.auth.repository.UserDetailsRepository;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import com.tendora_server.tendora.modules.auth.authdto.RegistrationRequest;
+import com.tendora_server.tendora.modules.auth.service.AuthorityService;
 import com.tendora_server.tendora.modules.auth.service.RegistrationService;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,7 +35,7 @@ public class AuthController {
 
 
     @Autowired
- AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
 
 
     @Autowired
@@ -40,6 +47,11 @@ public class AuthController {
 
     @Autowired
     JwtTokenHelper jwtTokenHelper;
+
+    @Autowired
+    AuthorityService authorityService;
+
+
 
     @PostMapping("/login")
     public ResponseEntity<UserToken> login (@RequestBody LoginRequest loginRequest) {
@@ -93,6 +105,21 @@ public class AuthController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+ 
+    @PostMapping("/authority")
+    public ResponseEntity<?> createAuthority(@RequestBody Map<String, String> body) {
+    String roleCode = body.get("roleCode");
+    String roleDescription = body.get("roleDescription");
+    Authority authority = authorityService.createAuthority(roleCode, roleDescription);
+    return ResponseEntity.ok(authority);
+}
+ 
+
+
 
  
 }
+
+  
+
+

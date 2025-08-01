@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { logOut } from '../../utils/Jwt_helper';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,7 +32,7 @@ const Account = () => {
 
   return (
     <div className="p-8">
-        {/* {isUserAdmin && <div className="text-right"><Link to={"/admin"} className="text-lg text-blue-900 underline">Manage Admin</Link></div>} */}
+        {isUserAdmin && <div className="text-right"><Link to={"/admin"} className="text-lg text-blue-900 underline">Manage Admin</Link></div>}
       {userInfo?.email && (
         <>
           <p className="text-xl font-bold">Hello {userInfo?.firstName}</p>

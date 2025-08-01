@@ -17,7 +17,7 @@ public class AuthorityService {
 
     public List<Authority> getUserAuthority(){
         List<Authority> authorities = new ArrayList<>();
-        Authority authority = authorityRepository.findByRoleCode("USER");
+        Authority authority = authorityRepository.findByRoleCode("ADMIN");
         authorities.add(authority);
         return authorities;
 

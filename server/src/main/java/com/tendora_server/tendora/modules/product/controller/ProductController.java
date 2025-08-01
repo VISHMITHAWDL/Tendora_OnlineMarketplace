@@ -8,27 +8,28 @@ import java.util.UUID;
 import com.tendora_server.tendora.modules.product.services.ProductService;
 
 import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/products")    
 public class ProductController {
-
+    
+    @Autowired
     private ProductService productService;
 
-    @Autowired
+    
     public ProductController(ProductService productService){
         this.productService = productService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Productdto>> getAllProducts(@RequestParam (required = false) UUID categoryId,@RequestParam (required = false) UUID typeId,@RequestParam (required = false) String slug) {
+    public ResponseEntity<List<Productdto>> getAllProducts(@RequestParam (required = false) UUID categoryId,@RequestParam (required = false) UUID typeId,@RequestParam (required = false) String slug, HttpServletResponse response) {
         List<Productdto> productList = new ArrayList<>();
         if (StringUtils.isNotBlank(slug)){
              Productdto productdto = productService.getProductBySlug(slug);
@@ -37,7 +38,7 @@ public class ProductController {
         else{
             productList = productService.getAllProducts(categoryId, typeId);
         }  
-        
+        response.setHeader("Content-Range",String.valueOf(productList.size()));
         return new ResponseEntity<>(productList,HttpStatus.OK); 
     }
 
