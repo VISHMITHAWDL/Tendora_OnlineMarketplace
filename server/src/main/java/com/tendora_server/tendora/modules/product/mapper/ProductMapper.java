@@ -112,6 +112,7 @@ public class ProductMapper {
     public Productdto mapToProductDto(Product product) {
         return Productdto.builder()
                 .id(product.getId())
+                .categoryTypeId(product.getCategoryType().getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
@@ -125,11 +126,7 @@ public class ProductMapper {
     
 
     private String getThumbnail(List<Resource> resources) {
-        return resources.stream()
-                .filter(Resource::getIsPrimary)
-                .findFirst()
-                .orElse(null)
-                .getUrl();
+        return resources.stream().filter(Resource::getIsPrimary).findFirst().orElse(null).getUrl();
     }
 
 

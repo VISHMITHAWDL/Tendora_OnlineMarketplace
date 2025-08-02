@@ -174,11 +174,11 @@ const ProductDetail = () => {
                 alt={product.name || product.title} 
                 className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
               />
-              {/* {product.discount && (
+              {product.discount && (
                 <div className="absolute top-4 left-4 bg-[#DA0037] text-white px-3 py-1 rounded-full text-sm font-bold">
                   -{product.discount}%
                 </div>
-              )} */}
+              )}
             </div>
 
             {/* Image Thumbnails */}
@@ -368,9 +368,18 @@ const ProductDetail = () => {
             <div className="mt-12">
               <h2 className="text-2xl font-bold mb-6 text-[#EDEDED]">Related Products</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {relatedProducts.map((item) => (
-                  <ProductCard key={item.id} product={item} />
-                ))}
+                {relatedProducts.map((item) => {
+                  const image = item.thumbnail || (item.productResources && item.productResources[0]?.url);
+                  return (
+                    <ProductCard
+                      key={item.id}
+                      product={{
+                        ...item,
+                        image,
+                      }}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}

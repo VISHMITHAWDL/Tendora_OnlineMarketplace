@@ -38,71 +38,120 @@ const Checkout = () => {
         }).finally(()=>{
         dispatch(setLoading(false))
         })
-    },[]);
+    },[dispatch]);
 
   return (
-        <div className='p-8 flex'>
-      <div className='w-[70%]'>
-        <div className='flex gap-8'>
-          {/* Address */}
-          <p className='font-bold'>Delivery address</p>
-          {userInfo?.addressList && 
-          <div>
-            <p>{userInfo?.addressList?.[0]?.name}</p>
-            <p>{userInfo?.addressList?.[0]?.street}</p>
-            <p>{userInfo?.addressList?.[0]?.city},{userInfo?.addressList?.[0]?.state} {userInfo?.addressList?.[0]?.zipCode}</p>
-            <p>{userInfo?.addressList?.[0]?.phoneNumber}</p>
-          </div>}
-        </div>
-        <hr className='h-[2px] bg-slate-200 w-[90%] my-4'></hr>    
-        <div className='flex gap-8 flex-col'>
-          {/* Address */}
-          <p className='font-bold'>Choose delivery</p>
-          <div>
-            <p>Select a day</p>
-            <div className='flex gap-4 mt-4'>
-                  <div className='w-[80px] h-[48px] flex flex-col justify-center border text-center mb-4 rounded-lg mr-4 cursor-pointer
-                   hover:scale-110 bg-gray-200 border-gray-500 text-gray-500'><p className='text-center'>{'Oct 5'}</p></div>
+    <div className='bg-[#171717] text-[#EDEDED] min-h-screen p-8'>
+      <div className='max-w-7xl mx-auto flex flex-col lg:flex-row gap-8'>
+        <div className='lg:w-[70%] space-y-8'>
+          {/* Delivery Address Section */}
+          <div className='bg-[#181818] rounded-xl p-6 border border-[#444444]'>
+            <h2 className='text-xl font-bold text-[#EDEDED] mb-4'>Delivery Address</h2>
+            {userInfo?.addressList && (
+              <div className='bg-[#171717] rounded-lg p-4 border border-[#444444]'>
+                <p className='font-semibold text-[#EDEDED] mb-2'>{userInfo?.addressList?.[0]?.name}</p>
+                <p className='text-[#EDEDED]/80'>{userInfo?.addressList?.[0]?.street}</p>
+                <p className='text-[#EDEDED]/80'>{userInfo?.addressList?.[0]?.city}, {userInfo?.addressList?.[0]?.state} {userInfo?.addressList?.[0]?.zipCode}</p>
+                <p className='text-[#EDEDED]/70 mt-2'>{userInfo?.addressList?.[0]?.phoneNumber}</p>
+              </div>
+            )}
+          </div>
 
-            <div className='w-[80px] h-[48px] flex flex-col justify-center border text-center mb-4 rounded-lg mr-4 cursor-pointer
-                   hover:scale-110 bg-white border-gray-500 text-gray-500'><p className='text-center'>{'Oct 8'}</p></div>
-                  
-                  </div>
+          {/* Delivery Date Section */}
+          {/* <div className='bg-[#181818] rounded-xl p-6 border border-[#444444]'>
+            <h2 className='text-xl font-bold text-[#EDEDED] mb-4'>Choose Delivery Date</h2>
+            <p className='text-[#EDEDED]/80 mb-4'>Select a day</p>
+            <div className='flex gap-4'>
+              <div className='w-20 h-12 flex items-center justify-center border border-[#444444] rounded-lg cursor-pointer hover:border-[#DA0037] hover:bg-[#DA0037]/10 transition-all bg-[#171717] text-[#EDEDED]'>
+                <p className='text-sm font-medium'>Oct 5</p>
+              </div>
+              <div className='w-20 h-12 flex items-center justify-center border border-[#444444] rounded-lg cursor-pointer hover:border-[#DA0037] hover:bg-[#DA0037]/10 transition-all bg-[#171717] text-[#EDEDED]'>
+                <p className='text-sm font-medium'>Oct 8</p>
+              </div>
+            </div>
+          </div> */}
+          {/* Payment Method Section */}
+          <div className='bg-[#181818] rounded-xl p-6 border border-[#444444]'>
+            <h2 className='text-xl font-bold text-[#EDEDED] mb-4'>Payment Method</h2>
+            <div className='space-y-4'>
+              <label className='flex items-center gap-3 p-4 rounded-lg border border-[#444444] hover:border-[#DA0037] transition-colors cursor-pointer bg-[#171717]'>
+                <input 
+                  type='radio' 
+                  name='payment_method' 
+                  value='CARD' 
+                  onChange={() => setPaymentMethod('CARD')}
+                  className='accent-[#DA0037]'
+                />
+                <span className='text-[#EDEDED]'>Credit/Debit Card</span>
+              </label>
+              
+              <label className='flex items-center gap-3 p-4 rounded-lg border border-[#444444] hover:border-[#DA0037] transition-colors cursor-pointer bg-[#171717]'>
+                <input 
+                  type='radio' 
+                  name='payment_method' 
+                  value='COD' 
+                  onChange={() => setPaymentMethod('COD')}
+                  className='accent-[#DA0037]'
+                />
+                <span className='text-[#EDEDED]'>Cash on Delivery</span>
+              </label>
+              
+              <label className='flex items-center gap-3 p-4 rounded-lg border border-[#444444] hover:border-[#DA0037] transition-colors cursor-pointer bg-[#171717]'>
+                <input 
+                  type='radio' 
+                  name='payment_method' 
+                  value='UPI' 
+                  onChange={() => setPaymentMethod('UPI')}
+                  className='accent-[#DA0037]'
+                />
+                <span className='text-[#EDEDED]'>UPI/Wallet</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Payment Component or Pay Button */}
+          {paymentMethod === 'CARD' && <PlacePayment userId={userInfo?.id} addressId={userInfo?.addressList?.[0]?.id}/>}
+
+          {paymentMethod !== 'CARD' && paymentMethod && (
+            <button 
+              className='w-full max-w-xs h-12 bg-[#DA0037] hover:bg-[#b8002c] transition-colors rounded-lg font-medium text-[#EDEDED] shadow-lg'
+              onClick={() => navigate('/payment')}
+            >
+              Pay Now
+            </button>
+          )}
+        </div>
+
+        {/* Order Summary Sidebar */}
+        <div className='lg:w-[30%]'>
+          <div className='bg-[#181818] rounded-xl p-6 border border-[#444444] sticky top-8'>
+            <h2 className='text-xl font-bold text-[#EDEDED] mb-6'>Order Summary</h2>
+            <div className='space-y-4'>
+              <div className='flex justify-between items-center text-[#EDEDED]/80'>
+                <span>Items Count</span>
+                <span className='font-medium text-[#EDEDED]'>{cart?.length}</span>
+              </div>
+              
+              <div className='flex justify-between items-center text-[#EDEDED]/80'>
+                <span>Subtotal</span>
+                <span className='font-medium text-[#EDEDED]'>${subTotal}</span>
+              </div>
+              
+              <div className='flex justify-between items-center text-[#EDEDED]/80'>
+                <span>Shipping</span>
+                <span className='font-medium text-[#DA0037]'>FREE</span>
+              </div>
+              
+              <hr className='border-[#444444] my-4'/>
+              
+              <div className='flex justify-between items-center text-lg font-bold'>
+                <span className='text-[#EDEDED]'>Total Amount</span>
+                <span className='text-[#DA0037]'>${subTotal}</span>
+              </div>
+            </div>
           </div>
         </div>
-        <hr className='h-[2px] bg-slate-200 w-[90%] my-4'></hr>
-        <div className='flex flex-col gap-2'>
-          {/* Address */}
-          <p className='font-bold'>Payment Method</p>
-          <div className='mt-4 flex flex-col gap-4'>
-            <div className='flex gap-2'>
-            <input type='radio' name='payment_mathod' value={'CARD'} onChange={()=> setPaymentMethod('CARD')}/>
-            <p> Credit/Debit Card</p>
-            </div>
-            <div className='flex gap-2'>
-            <input type='radio' name='payment_mathod' value={'COD'} onChange={()=> setPaymentMethod('COD')}/>
-            <p> Cash on delivery</p>
-            </div>
-            <div className='flex gap-2'>
-            <input type='radio' name='payment_mathod' value={'UPI'} onChange={()=> setPaymentMethod('COD')}/>
-            <p> UPI/Wallet</p>
-            </div>
-
-          </div>
-        </div>
-        {paymentMethod === 'CARD' && <PlacePayment userId={userInfo?.id} addressId={userInfo?.addressList?.[0]?.id}/>}
-
-        {paymentMethod !== 'CARD' && <button className='w-[150px] items-center h-[48px] bg-black border rounded-lg mt-4 text-white hover:bg-gray-800' onClick={()=> navigate('/payment')}>Pay Now</button>}
       </div>
-      <div className='w-[30%] h-[30%] border rounded-lg border-gray-500 p-4 flex flex-col gap-4'>
-        <p>Order Summary</p>
-        <p>Items Count = {cart?.length}</p>
-        <p>SubTotal = ${subTotal}</p>
-        <p>Shipping = FREE</p>
-        <hr className='h-[2px] bg-gray-400'></hr>
-        <p>Total Amount = ${subTotal}</p>
-      </div>
-
     </div>
   )
 }

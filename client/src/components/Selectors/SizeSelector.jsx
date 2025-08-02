@@ -1,0 +1,1 @@
+export const sizeSelector =["S","M","L","XL","XXL"]

@@ -20,4 +20,6 @@ public interface ProductService {
     public Product updateProduct(Productdto productdto);
 
     Product fetchProductById(UUID uuid) throws Exception;
+
+    void deleteProduct(UUID id);
 }

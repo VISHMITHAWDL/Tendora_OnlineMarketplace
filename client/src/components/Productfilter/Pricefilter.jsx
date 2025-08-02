@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 
 const Pricefilter = ({
   min = 0,
@@ -11,6 +11,11 @@ const Pricefilter = ({
   const [value, setValue] = useState(defaultValue);
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef(null);
+  
+  // Update value when defaultValue changes from parent (when products change)
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const handleSliderChange = useCallback((newValue) => {
     setValue(newValue);
@@ -31,7 +36,7 @@ const Pricefilter = ({
 
   const getPercentage = (val) => ((val - min) / (max - min)) * 100;
 
-  const handleMouseDown = (index) => (e) => {
+  const handleMouseDown = (index) => () => {
     setIsDragging(true);
     const slider = sliderRef.current;
     if (!slider) return;
@@ -65,14 +70,14 @@ const Pricefilter = ({
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-slate-50 to-white rounded-2xl shadow-lg border border-slate-200/50 backdrop-blur-sm">
+    <div className="p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl shadow-md border border-gray-200/70 backdrop-blur-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+        <h3 className="text-lg font-semibold text-gray-800">
           Price Range
         </h3>
-        <div className="px-3 py-1 bg-blue-50 rounded-full border border-blue-200">
-          <span className="text-sm font-medium text-blue-700">
+        <div className="px-3 py-1 bg-red-50 rounded-full border border-red-200">
+          <span className="text-sm font-medium text-red-600">
             {currency}{value[0].toLocaleString()} - {currency}{value[1].toLocaleString()}
           </span>
         </div>
@@ -82,11 +87,11 @@ const Pricefilter = ({
       <div className="mb-8">
         <div
           ref={sliderRef}
-          className="relative h-2 bg-gradient-to-r from-slate-200 to-slate-300 rounded-full cursor-pointer shadow-inner"
+          className="relative h-2 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full cursor-pointer shadow-inner"
         >
           {/* Active range */}
           <div
-            className="absolute h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-sm"
+            className="absolute h-2 bg-gradient-to-r from-red-500 to-red-600 rounded-full shadow-sm"
             style={{
               left: `${getPercentage(value[0])}%`,
               width: `${getPercentage(value[1]) - getPercentage(value[0])}%`,
@@ -95,24 +100,24 @@ const Pricefilter = ({
           
           {/* Min thumb */}
           <div
-            className={`absolute w-6 h-6 bg-white border-3 border-blue-500 rounded-full shadow-lg cursor-grab transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 hover:scale-110 ${
+            className={`absolute w-6 h-6 bg-white border-2 border-red-500 rounded-full shadow-lg cursor-grab transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 hover:scale-110 ${
               isDragging ? 'scale-125 shadow-xl' : ''
             }`}
             style={{ left: `${getPercentage(value[0])}%`, top: '50%' }}
             onMouseDown={handleMouseDown(0)}
           >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 opacity-0 hover:opacity-20 transition-opacity" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-red-400 to-red-600 opacity-0 hover:opacity-20 transition-opacity" />
           </div>
           
           {/* Max thumb */}
           <div
-            className={`absolute w-6 h-6 bg-white border-3 border-blue-500 rounded-full shadow-lg cursor-grab transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 hover:scale-110 ${
+            className={`absolute w-6 h-6 bg-white border-2 border-red-500 rounded-full shadow-lg cursor-grab transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 hover:scale-110 ${
               isDragging ? 'scale-125 shadow-xl' : ''
             }`}
             style={{ left: `${getPercentage(value[1])}%`, top: '50%' }}
             onMouseDown={handleMouseDown(1)}
           >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 opacity-0 hover:opacity-20 transition-opacity" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-red-400 to-red-600 opacity-0 hover:opacity-20 transition-opacity" />
           </div>
         </div>
         
@@ -126,10 +131,10 @@ const Pricefilter = ({
       {/* Input fields */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-600">Minimum</label>
+          <label className="text-sm font-medium text-gray-600">Minimum</label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-slate-500 font-medium">{currency}</span>
+              <span className="text-gray-500 font-medium">{currency}</span>
             </div>
             <input
               type="number"
@@ -138,16 +143,16 @@ const Pricefilter = ({
               max={value[1]}
               step={step}
               onChange={handleMinChange}
-              className="w-full pl-8 pr-3 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/80 backdrop-blur-sm hover:bg-white group-hover:border-slate-400"
+              className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 bg-white/80 backdrop-blur-sm hover:bg-white group-hover:border-gray-400"
             />
           </div>
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-600">Maximum</label>
+          <label className="text-sm font-medium text-gray-600">Maximum</label>
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-slate-500 font-medium">{currency}</span>
+              <span className="text-gray-500 font-medium">{currency}</span>
             </div>
             <input
               type="number"
@@ -156,31 +161,12 @@ const Pricefilter = ({
               max={max}
               step={step}
               onChange={handleMaxChange}
-              className="w-full pl-8 pr-3 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/80 backdrop-blur-sm hover:bg-white group-hover:border-slate-400"
+              className="w-full pl-8 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 bg-white/80 backdrop-blur-sm hover:bg-white group-hover:border-gray-400"
             />
           </div>
         </div>
       </div>
 
-      {/* Quick preset buttons */}
-      <div className="mt-6 pt-4 border-t border-slate-200">
-        <div className="flex flex-wrap gap-2">
-          {[
-            { label: 'Under $100', range: [min, Math.min(100, max)] },
-            { label: '$100-500', range: [100, Math.min(500, max)] },
-            { label: '$500+', range: [500, max] },
-            { label: 'Reset', range: [min, max] }
-          ].map((preset) => (
-            <button
-              key={preset.label}
-              onClick={() => handleSliderChange(preset.range)}
-              className="px-3 py-1.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors duration-200 hover:text-slate-800"
-            >
-              {preset.label}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

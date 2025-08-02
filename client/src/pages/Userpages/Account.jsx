@@ -31,24 +31,35 @@ const Account = () => {
 
 
   return (
-    <div className="p-8">
-        {isUserAdmin && <div className="text-right"><Link to={"/admin"} className="text-lg text-blue-900 underline">Manage Admin</Link></div>}
+    <div className="bg-[#171717] text-[#EDEDED] min-h-screen p-8">
+        {isUserAdmin && (
+          <div className="text-right mb-6">
+            <Link
+              to={"/admin"}
+              className="inline-flex items-center px-6 py-2 rounded-xl border border-[#DA0037] bg-[#DA0037] text-[#EDEDED] hover:bg-[#b8002c] hover:border-[#b8002c] transition font-medium"
+            >
+              Manage Admin
+            </Link>
+          </div>
+        )}
       {userInfo?.email && (
         <>
-          <p className="text-xl font-bold">Hello {userInfo?.firstName}</p>
-          <p>Welcome to your account</p>
-          <div className="md:flex mt-4">
-            <ul className="lex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
-              <li>
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Hello {userInfo?.firstName}</h1>
+            <p className="text-lg text-[#EDEDED]/70">Welcome to your account dashboard</p>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-8 mt-8">
+            <div className="lg:w-80">
+              <nav className="space-y-3">
                 <NavLink
                   to={"/account/profile"}
                   className={({isActive})=> [
-                    isActive? "bg-black hover:bg-gray-400":"bg-gray-400 hover:bg-black",
-                    "inline-flex items-center px-4 py-3 text-white rounded-lg active w-full"
+                    isActive? "bg-[#DA0037] hover:bg-[#b8002c] border-[#DA0037]":"bg-[#181818] hover:bg-[#444444] border-[#444444]",
+                    "inline-flex items-center px-6 py-4 text-[#EDEDED] rounded-xl border transition-all duration-200 w-full font-medium group"
                   ].join(" ")}
                 >
                   <svg
-                    className="w-4 h-4 me-2 text-white"
+                    className="w-5 h-5 me-3 text-current"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -58,17 +69,15 @@ const Account = () => {
                   </svg>
                   Profile
                 </NavLink>
-              </li>
-              <li>
                 <NavLink
                   to={"/account/orderhistory"}
                   className={({isActive})=> [
-                    isActive? "bg-black hover:bg-gray-400":"bg-gray-400 hover:bg-black",
-                    "inline-flex items-center px-4 py-3 text-white rounded-lg active w-full"
+                    isActive? "bg-[#DA0037] hover:bg-[#b8002c] border-[#DA0037]":"bg-[#181818] hover:bg-[#444444] border-[#444444]",
+                    "inline-flex items-center px-6 py-4 text-[#EDEDED] rounded-xl border transition-all duration-200 w-full font-medium group"
                   ].join(" ")}
                 >
                   <svg
-                    className="w-4 h-4 me-2 text-white"
+                    className="w-5 h-5 me-3 text-current"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -80,17 +89,15 @@ const Account = () => {
                   </svg>
                   Orders
                 </NavLink>
-              </li>
-              <li>
                 <NavLink
                   to={"/account/settings"}
                   className={({isActive})=> [
-                    isActive? "bg-black hover:bg-gray-400":"bg-gray-400 hover:bg-black",
-                    "inline-flex items-center px-4 py-3 text-white rounded-lg active w-full"
+                    isActive? "bg-[#DA0037] hover:bg-[#b8002c] border-[#DA0037]":"bg-[#181818] hover:bg-[#444444] border-[#444444]",
+                    "inline-flex items-center px-6 py-4 text-[#EDEDED] rounded-xl border transition-all duration-200 w-full font-medium group"
                   ].join(" ")}
                 >
                   <svg
-                    className="w-4 h-4 me-2 text-white"
+                    className="w-5 h-5 me-3 text-current"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -100,11 +107,10 @@ const Account = () => {
                   </svg>
                   Settings
                 </NavLink>
-              </li>
-            </ul>
-            <div className="px-4 w-full rounded-lg">
+              </nav>
+            </div>
+            <div className="flex-1 bg-[#181818] rounded-xl border border-[#444444] p-6">
                 <Outlet />
-
             </div>
           </div>
         </>

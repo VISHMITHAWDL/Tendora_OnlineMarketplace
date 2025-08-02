@@ -1,38 +1,55 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Search, ShoppingCart, User, Heart, Menu, X, ChevronDown } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { countCartItems } from '../../store/features/Cart';
+import SearchBar from '../common/SearchBar';
+import { getAllProducts } from '../../api/Porducts/fetchProduct';
 
 const Navigationbar = () => {
-
-
-
   const cartLength = useSelector(countCartItems);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
   const dropdownRef = useRef(null);
 
   const productLinks = [
     { to: '/kidssection', label: 'Kid Fashion' },
     { to: '/menfashion', label: 'Men Fashion' },
     { to: '/womenfashion', label: 'Women Fashion' },
-    { to: '/special-deals', label: 'Special Deals' },
   ];
   const navigate = useNavigate();
+  
+  // Fetch all products for search functionality
+  useEffect(() => {
+    const fetchAllProducts = async () => {
+      try {
+        const products = await getAllProducts();
+        setAllProducts(products || []);
+      } catch (error) {
+        console.error('Error fetching products for search:', error);
+      }
+    };
+
+    fetchAllProducts();
+  }, []);
+  
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+        // We don't hide the search here anymore as we want it to remain visible
+        // when navigating to collection pages
       }
     };
     
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
         setIsDropdownOpen(false);
+        // We don't hide the search here anymore
       }
     };
 
@@ -47,11 +64,9 @@ const Navigationbar = () => {
     };
   }, [isDropdownOpen]);
 
-  const handleSearch = (e) => {
-    if (e.key === 'Enter') {
-      console.log('Searching for:', searchQuery);
-      // Add your search logic here
-    }
+  // Function to hide search when navigating to non-collection pages
+  const hideSearch = () => {
+    setShowSearch(false);
   };
 
   const navLinkStyles = ({ isActive }) => 
@@ -77,7 +92,7 @@ const Navigationbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <ul className="flex space-x-6 text-sm font-medium">
               <li>
-                <NavLink to="/" className={navLinkStyles}>
+                <NavLink to="/" className={navLinkStyles} onClick={hideSearch}>
                   Home
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#DA0037] transition-all duration-300 group-hover:w-full"></span>
                 </NavLink>
@@ -85,12 +100,15 @@ const Navigationbar = () => {
               
               <li className="relative" ref={dropdownRef}>
                 <button 
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  onClick={() => {
+                    setIsDropdownOpen(!isDropdownOpen);
+                    // Don't show search when just opening the dropdown
+                  }}
                   className="hover:text-[#DA0037] transition duration-300 flex items-center space-x-1 relative group"
                   aria-expanded={isDropdownOpen}
                   aria-haspopup="true"
                 >
-                  <span>Products</span>
+                  <span>Collections</span>
                   <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#DA0037] transition-all duration-300 group-hover:w-full"></span>
                 </button>
@@ -102,7 +120,11 @@ const Navigationbar = () => {
                           key={link.to}
                           to={link.to} 
                           className={dropdownItemStyles}
-                          onClick={() => setIsDropdownOpen(false)}
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            // Show search when clicking on a category
+                            setShowSearch(true);
+                          }}
                         >
                           {link.label}
                         </NavLink>
@@ -113,44 +135,28 @@ const Navigationbar = () => {
               </li>
               
               <li>
-                <NavLink to="/about" className={navLinkStyles}>
+                <NavLink to="/about" className={navLinkStyles} onClick={hideSearch}>
                   About
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#DA0037] transition-all duration-300 group-hover:w-full"></span>
                 </NavLink>
               </li>
               
               <li>
-                <NavLink to="/contact" className={navLinkStyles}>
+                <NavLink to="/contact" className={navLinkStyles} onClick={hideSearch}>
                   Contact
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#DA0037] transition-all duration-300 group-hover:w-full"></span>
                 </NavLink>
               </li>
             </ul>
 
-            {/* Search Bar */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearch}
-                className="bg-[#444444] text-[#EDEDED] placeholder-gray-400 px-4 py-2 pl-10 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#DA0037] transition duration-300 w-64"
-              />
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-            </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4">              
               <button 
-                className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300"
-                aria-label="Wishlist"
-              >
-                <Heart className="h-5 w-5" />
-              </button>
-              
-              <button 
-                onClick={() => navigate('/cart')}
+                onClick={() => {
+                  navigate('/cart');
+                  hideSearch();
+                }}
                 className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300 relative"
                 aria-label="Shopping Cart"
               >
@@ -164,7 +170,10 @@ const Navigationbar = () => {
               </button>
               
               <button 
-                onClick={() => navigate('/account/profile')}
+                onClick={() => {
+                  navigate('/account/profile');
+                  hideSearch();
+                }}
                 className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300"
                 aria-label="User Account"
               >
@@ -172,11 +181,6 @@ const Navigationbar = () => {
               </button>
             </div>
           </div>
-
-          {/* Login Button */}
-          <button className="hidden md:block bg-[#DA0037] hover:bg-[#444444] text-white px-6 py-2 rounded-full transition duration-300 font-medium">
-            Login
-          </button>
 
           {/* Mobile Menu Button */}
           <button 
@@ -193,19 +197,19 @@ const Navigationbar = () => {
         {isMenuOpen && (
           <div className="md:hidden mt-4 border-t border-[#444444] pt-4">
             <div className="space-y-4">
-              {/* Mobile Search */}
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleSearch}
-                  className="w-full bg-[#444444] text-[#EDEDED] placeholder-gray-400 px-4 py-2 pl-10 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#DA0037] transition duration-300"
-                />
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-              </div>
-
+              {/* Mobile Search - Only shows when a collection item is clicked */}
+              {showSearch && (
+                <div className="mb-3">
+                  <SearchBar
+                    products={allProducts}
+                    placeholder="Search products..."
+                    showDropdown={true}
+                    maxResults={5}
+                    className="w-full"
+                  />
+                </div>
+              )}
+              
               {/* Mobile Navigation Links */}
               <ul className="space-y-2">
                 <li>
@@ -216,7 +220,10 @@ const Navigationbar = () => {
                         isActive ? 'text-[#DA0037] font-semibold' : ''
                       }`
                     }
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      hideSearch();
+                    }}
                   >
                     Home
                   </NavLink>
@@ -224,11 +231,14 @@ const Navigationbar = () => {
                 
                 <li>
                   <button
-                    onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                    onClick={() => {
+                      setIsMobileProductsOpen(!isMobileProductsOpen);
+                      // Don't show search when just opening the dropdown
+                    }}
                     className="w-full text-left py-2 hover:text-[#DA0037] transition duration-300 flex items-center justify-between"
                     aria-expanded={isMobileProductsOpen}
                   >
-                    <span>Products</span>
+                    <span>Collection</span>
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileProductsOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isMobileProductsOpen && (
@@ -245,6 +255,8 @@ const Navigationbar = () => {
                           onClick={() => {
                             setIsMenuOpen(false);
                             setIsMobileProductsOpen(false);
+                            // Show search when clicking on a category
+                            setShowSearch(true);
                           }}
                         >
                           {link.label}
@@ -262,7 +274,10 @@ const Navigationbar = () => {
                         isActive ? 'text-[#DA0037] font-semibold' : ''
                       }`
                     }
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      hideSearch();
+                    }}
                   >
                     About
                   </NavLink>
@@ -276,7 +291,10 @@ const Navigationbar = () => {
                         isActive ? 'text-[#DA0037] font-semibold' : ''
                       }`
                     }
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      hideSearch();
+                    }}
                   >
                     Contact
                   </NavLink>
@@ -286,14 +304,13 @@ const Navigationbar = () => {
               {/* Mobile Action Buttons */}
               <div className="flex items-center justify-between pt-4 border-t border-[#444444]">
                 <div className="flex items-center space-x-4">
-                  <button 
-                    className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300"
-                    aria-label="Wishlist"
-                  >
-                    <Heart className="h-5 w-5" />
-                  </button>
                   
                   <button 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/cart');
+                      hideSearch();
+                    }}
                     className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300 relative"
                     aria-label="Shopping Cart"
                   >
@@ -306,6 +323,11 @@ const Navigationbar = () => {
                   </button>
                   
                   <button 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate('/account/profile');
+                      hideSearch();
+                    }}
                     className="p-2 rounded-full hover:bg-[#444444] hover:text-[#DA0037] transition duration-300"
                     aria-label="User Account"
                   >
@@ -313,9 +335,6 @@ const Navigationbar = () => {
                   </button>
                 </div>
                 
-                <button className="bg-[#DA0037] hover:bg-[#444444] text-white px-6 py-2 rounded-full transition duration-300 font-medium">
-                  Login
-                </button>
               </div>
             </div>
           </div>

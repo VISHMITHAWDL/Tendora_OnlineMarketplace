@@ -42,8 +42,8 @@ public class CategoryService {
                 .description(categoryDto.getDescription())
                 .build();
 
-            if(null != categoryDto.getCategoryTypeList()) {
-                List<CategoryType> categoryTypes = mapToCategoryTypes(categoryDto.getCategoryTypeList(), category);
+            if(null != categoryDto.getCategoryTypes()) {
+                List<CategoryType> categoryTypes = mapToCategoryTypes(categoryDto.getCategoryTypes(), category);
                 category.setCategoryTypes(categoryTypes);
             }
         // Map other fields as necessary
@@ -84,8 +84,8 @@ public class CategoryService {
         List<CategoryType> existing = category.getCategoryTypes();
         List<CategoryType> list= new ArrayList<>();
 
-        if(categoryDto.getCategoryTypeList() != null){
-            categoryDto.getCategoryTypeList().forEach(categoryTypeDto -> {
+        if(categoryDto.getCategoryTypes() != null){
+            categoryDto.getCategoryTypes().forEach(categoryTypeDto -> {
                 if(null != categoryTypeDto.getId()){
                    Optional<CategoryType> categoryType = existing.stream().filter(t -> t.getId().equals(categoryTypeDto.getId())).findFirst();
                    CategoryType categoryType1= categoryType.get();

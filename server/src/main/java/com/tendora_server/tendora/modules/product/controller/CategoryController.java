@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.tendora_server.tendora.modules.product.services.CategoryService;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import com.tendora_server.tendora.modules.product.dto.CategoryDto;
 import com.tendora_server.tendora.modules.product.entities.Category;
 import org.springframework.http.HttpStatus;
@@ -33,8 +36,9 @@ public class CategoryController {
 
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
+    public ResponseEntity<List<Category>> getAllCategories(HttpServletResponse response) {
         List<Category> categories = categoryService.getAllCategories();
+        response.setHeader("Content-Range",String.valueOf(categories.size()));
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 

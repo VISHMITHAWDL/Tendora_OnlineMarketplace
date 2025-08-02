@@ -10,7 +10,6 @@ import Home              from './pages/Home';
 import Kidsection   from './pages/productpages/Kidsection';
 import Menfashion        from './pages/productpages/Menfashion';
 import Womenfashion      from './pages/productpages/Womenfashion';
-import Specialdeals      from './pages/productpages/Specialdeals';
 import Notfound          from './pages/Notfound';
 import About            from './pages/About';
 import Contact          from './pages/Contact';
@@ -84,7 +83,6 @@ const Routes = createBrowserRouter([
       { path: '/kidssection',  element: <Kidsection /> },
       { path: '/menfashion',        element: <Menfashion /> },
       { path: '/womenfashion',      element: <Womenfashion /> },
-      { path: '/special-deals',      element: <Specialdeals /> },
       { path: '*',                   element: <Notfound /> },
       { path: '/about',              element: <About /> },
       { path: '/contact',            element: <Contact /> },
