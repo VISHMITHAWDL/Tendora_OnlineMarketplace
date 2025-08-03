@@ -1,145 +1,152 @@
-// components/ResponsiveProductCarousel.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import ProductCard from './ProductCard';
+import { useDispatch, useSelector } from 'react-redux';
+import ProductCard from './Productcard';
+import { getAllProducts } from '../../api/Porducts/fetchProduct';
+import { setLoading } from '../../store/features/Common';
 
-// Example product data
-const exampleProducts = [
-  {
-    id: 1,
-    name: 'Wireless Headphones',
-    price: 99.99,
-    image: ['https://via.placeholder.com/300?text=Headphones'],
-    rating: 4.5,
-    description: 'Over-ear, noise-cancelling, Bluetooth 5.0.'
-  },
-   {
-    id: 1,
-    name: 'Wireless Headphones',
-    price: 99.99,
-    image: ['https://via.placeholder.com/300?text=Headphones'],
-    rating: 4.5,
-    description: 'Over-ear, noise-cancelling, Bluetooth 5.0.'
-  },
-  {
-    id: 2,
-    name: 'Smart Watch',
-    price: 149.99,
-    image: ['https://via.placeholder.com/300?text=Smart+Watch'],
-    rating: 4.2,
-    description: 'Heart-rate monitor, GPS, 7-day battery life.'
-  },
-  {
-    id: 3,
-    name: 'Portable Speaker',
-    price: 59.99,
-    image: ['https://via.placeholder.com/300?text=Speaker'],
-    rating: 4.7,
-    description: 'Waterproof, 360° sound, 10-hour playtime.'
-  },
-  {
-    id: 4,
-    name: 'Fitness Tracker',
-    price: 39.99,
-    image: ['https://via.placeholder.com/300?text=Tracker'],
-    rating: 4.1,
-    description: 'Step counter, sleep monitor, calorie tracker.'
-  },
-  {
-    id: 5,
-    name: 'Gaming Mouse',
-    price: 49.99,
-    image: ['https://via.placeholder.com/300?text=Gaming+Mouse'],
-    rating: 4.8,
-    description: 'RGB lighting, 16000 DPI, programmable buttons.'
-  },
-  {
-    id: 6,
-    name: '4K Action Camera',
-    price: 119.99,
-    image: ['https://via.placeholder.com/300?text=Action+Camera'],
-    rating: 4.3,
-    description: 'Waterproof up to 30m, image stabilization.'
-  },
-];
-
-const ResponsiveProductCarousel = ({ products = exampleProducts, itemsPerView = 3 }) => {
+const ResponsiveProductCarousel = ({ categorytype, title = "New Arrivals" }) => {
+  const Categorydata = useSelector((state) => state?.categoryState?.categories);
+  const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const maxIndex = Math.max(0, products.length - itemsPerView);
 
-  const nextSlide = () => setCurrentIndex(prev => (prev >= maxIndex ? 0 : prev + 1));
-  const prevSlide = () => setCurrentIndex(prev => (prev <= 0 ? maxIndex : prev - 1));
-  const goToSlide  = index => setCurrentIndex(Math.min(index, maxIndex));
+  // Find the category based on the code
+  const category = useMemo(() => {
+    return Categorydata?.find((category) => category.code === categorytype);
+  }, [Categorydata, categorytype]);
+
+  // Filter new arrival products
+  const newArrivalProducts = useMemo(() => {
+    return products.filter(product => product.newArrival === true);
+  }, [products]);
+
+  // Fetch products when category changes
+  useEffect(() => {
+    if (!category?.id) return;
+
+    dispatch(setLoading(true));
+    getAllProducts(category.id)
+      .then((data) => {
+        setProducts(data || []);
+        console.log("Fetched products:", data);
+      })
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        setProducts([]);
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+      });
+  }, [category?.id, dispatch]);
+
+  // Calculate how many items to show per view based on screen size
+  const getItemsPerView = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) return 4; // lg screens
+      if (window.innerWidth >= 768) return 3;  // md screens
+      if (window.innerWidth >= 640) return 2;  // sm screens
+      return 1; // mobile
+    }
+    return 4; // default for SSR
+  };
+
+  const [itemsPerView, setItemsPerView] = useState(getItemsPerView());
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerView(getItemsPerView());
+      // Reset to first slide if current index is out of bounds
+      const maxIndex = Math.max(0, newArrivalProducts.length - getItemsPerView());
+      if (currentIndex > maxIndex) {
+        setCurrentIndex(0);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [currentIndex, newArrivalProducts.length]);
+
+  // Navigation functions
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? Math.max(0, newArrivalProducts.length - itemsPerView) : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    const maxIndex = Math.max(0, newArrivalProducts.length - itemsPerView);
+    setCurrentIndex((prevIndex) => 
+      prevIndex >= maxIndex ? 0 : prevIndex + 1
+    );
+  };
+
+  // Don't render if no new arrival products
+  if (!newArrivalProducts.length) {
+    return null;
+  }
 
   return (
-    <div className="relative w-full mx-auto p-4 sm:p-6 bg-[#171717]">
-      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-[#EDEDED]">
-        Featured Products
-      </h2>
+    <div className="w-full bg-[#171717] py-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-[#EDEDED]">{title}</h2>
+        <div className="flex space-x-2">
+          <button
+            onClick={goToPrevious}
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={currentIndex === 0}
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={goToNext}
+            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={currentIndex >= Math.max(0, newArrivalProducts.length - itemsPerView)}
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+      </div>
 
-      {/* Desktop & Tablet Carousel */}
-      <div className="hidden md:block relative overflow-hidden rounded-lg">
-        <div
+      {/* Carousel Container */}
+      <div className="relative overflow-hidden">
+        <div 
           className="flex transition-transform duration-500 ease-in-out"
           style={{
             transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
-            width: `${(products.length * 100) / itemsPerView}%`
+            width: `${(newArrivalProducts.length / itemsPerView) * 100}%`
           }}
         >
-          {products.map((product, idx) => (
-            <div
-              key={product.id ?? idx}
-              className="px-2"
-              style={{ width: `${100 / products.length}%` }}
+          {newArrivalProducts.map((product) => (
+            <div 
+              key={product.id} 
+              className="flex-shrink-0 px-2"
+              style={{ width: `${80 / newArrivalProducts.length}%` }}
             >
-              <ProductCard product={product} />
+              <ProductCard
+                product={{
+                  ...product,
+                  image: product.thumbnail,
+                  // Fake reviews for demo
+                            discount: Math.floor(Math.random() * 11) // Random discount 0-10
+                }}
+              />
             </div>
           ))}
         </div>
-
-        {/* Navigation Buttons */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full hover:opacity-80 transition-opacity shadow-lg"
-          style={{ backgroundColor: '#DA0037' }}
-        >
-          <ChevronLeft size={20} className="text-white" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full hover:opacity-80 transition-opacity shadow-lg"
-          style={{ backgroundColor: '#DA0037' }}
-        >
-          <ChevronRight size={20} className="text-white" />
-        </button>
       </div>
 
-      {/* Mobile & Tablet Scrollable List */}
-      <div className="md:hidden">
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
-            {products.map((product, idx) => (
-              <div
-                key={product.id ?? idx}
-                className="flex-shrink-0 w-72 sm:w-80"
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Dots Indicator - Only show on desktop */}
-      <div className="hidden md:flex justify-center mt-6 space-x-2">
-        {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
+      {/* Dots indicator */}
+      <div className="flex justify-center space-x-2 mt-6">
+        {Array.from({ length: Math.ceil(newArrivalProducts.length / itemsPerView) }).map((_, index) => (
           <button
-            key={idx}
-            onClick={() => goToSlide(idx)}
-            className={`w-3 h-3 rounded-full transition-opacity duration-200 ${
-              idx === currentIndex ? 'opacity-100' : 'opacity-50'
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+              currentIndex === index ? 'bg-red-600' : 'bg-gray-300'
             }`}
-            style={{ backgroundColor: '#DA0037' }}
           />
         ))}
       </div>

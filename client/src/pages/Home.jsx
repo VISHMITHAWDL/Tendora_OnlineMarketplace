@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Herosection from "../components/Home_component/Herosection";
-import Productcarousel from "../components/common/Productcarousel";
+import ResponsiveProductCarousel from "../components/common/Productcarousel";
 import Categories from "../components/Home_component/Catogeries";
 import fetchCategories from "../api/Porducts/fetchCategories";
 import { useDispatch } from "react-redux";
@@ -31,9 +31,30 @@ const Home = () => {
 
 
   return (
-    <div>
+    <div className="bg-[#171717] text-[#EDEDED] min-h-screen">
       <Herosection />      
-      <Productcarousel />
+      
+      {/* New Arrivals Carousels for different categories */}
+      <div className="container mx-auto px-4 space-y-12">
+        {/* Women's New Arrivals */}
+        <ResponsiveProductCarousel 
+          categorytype="WOMEN" 
+          title="Women's New Arrivals" 
+        />
+        
+        {/* Men's New Arrivals */}
+        <ResponsiveProductCarousel 
+          categorytype="MEN" 
+          title="Men's New Arrivals" 
+        />
+        
+        {/* Kids New Arrivals */}
+        <ResponsiveProductCarousel 
+          categorytype="KIDS" 
+          title="Kids New Arrivals" 
+        />
+      </div>
+      
       <Categories />
     </div>
   );
