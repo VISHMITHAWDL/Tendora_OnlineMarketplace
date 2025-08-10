@@ -45,12 +45,12 @@ const Footer = () => {
                 <Link to="/about" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block"
                   >About</Link>
                 <Link to="/contact" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block">Contact</Link>
-                <Link to="/women" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block">Women</Link>
-                <Link to="/men" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block">Men</Link>
-                <Link to="/sale" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block">Sale</Link>
+                <Link to="/womenfashion" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block">Women Fashion</Link>
+                <Link to="/menfashion" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block">Men Fashion</Link>
+                <Link to="/kidssection" className="hover:text-[#DA0037] text-sm transition-colors duration-300 hover:translate-x-1 transform inline-block">Kids Fashion</Link>
               </div>
             </div>
-
+ 
             <div className="flex-1">
               <h4 className="text-lg font-semibold mb-5 text-white tracking-wide">Customer Service</h4>
               <div className="flex flex-col gap-3">

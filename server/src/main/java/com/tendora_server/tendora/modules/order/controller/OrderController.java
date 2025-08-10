@@ -55,4 +55,11 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<List<OrderDetails>> getAllOrders() {
+        List<OrderDetails> orders = orderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+
 }

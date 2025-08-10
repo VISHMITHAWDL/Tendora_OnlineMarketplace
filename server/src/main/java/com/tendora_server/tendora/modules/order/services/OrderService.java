@@ -177,5 +177,21 @@ public class OrderService {
         }
 
     }
+
+    public List<OrderDetails> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream().map(order -> {
+            return OrderDetails.builder()
+                    .id(order.getId())
+                    .orderDate(order.getOrderDate())
+                    .orderStatus(order.getOrderStatus())
+                    .shipmentNumber(order.getShipmentTrackingNumber())
+                    .address(order.getAddress())
+                    .totalAmount(order.getTotalAmount())
+                    .orderItemList(getItemDetails(order.getOrderItemList()))
+                    .expectedDeliveryDate(order.getExpectedDeliveryDate())
+                    .build();
+        }).toList();
+    }
     
 }

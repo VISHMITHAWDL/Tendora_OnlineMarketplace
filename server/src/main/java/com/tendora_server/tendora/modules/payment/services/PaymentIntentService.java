@@ -18,8 +18,8 @@ public class PaymentIntentService {
         Map<String, String> metaData = new HashMap<>();
         metaData.put("orderId",order.getId().toString());
         PaymentIntentCreateParams paymentIntentCreateParams= PaymentIntentCreateParams.builder()
-                .setAmount((long)5000) // ₹50.00 in paise (minimum amount for Stripe)
-                .setCurrency("inr")//INR currency
+                .setAmount((long)5000) 
+                .setCurrency("inr")
                 .putAllMetadata(metaData)
                 .setDescription("Test Payment Project -1")
                 .setAutomaticPaymentMethods(

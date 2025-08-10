@@ -50,9 +50,6 @@ const ProductCard = ({ product }) => {
               {product.brand}
             </span>
           </div>
-          <button className="p-2 rounded-full bg-gray-100 hover:bg-red-600 hover:text-white transition-colors duration-300">
-            <ShoppingCart size={20} />
-          </button>
         </div>
       </div>
     </div>
