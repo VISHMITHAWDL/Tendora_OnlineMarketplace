@@ -1,0 +1,25 @@
+package com.tendora_server.tendora.modules.product.services;
+
+import com.tendora_server.tendora.modules.product.dto.Productdto;
+import com.tendora_server.tendora.modules.product.entities.Product;
+
+import java.util.List;
+import java.util.UUID;
+
+
+public interface ProductService {
+
+    public Product addProduct(Productdto product);
+
+    public List<Productdto> getAllProducts( UUID categoryId, UUID typeId);
+
+    public Productdto getProductBySlug(String slug);
+
+    public Productdto getProductById(UUID id);
+
+    public Product updateProduct(Productdto productdto);
+
+    Product fetchProductById(UUID uuid) throws Exception;
+
+    void deleteProduct(UUID id);
+}
