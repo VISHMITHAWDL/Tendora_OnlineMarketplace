@@ -158,10 +158,10 @@ const ProductDetail = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <div className="mb-8">
-          <Breadcum 
+          {/* <Breadcum 
             type_id={catInfo?.route}
             productName={product.name || product.title}
-          />
+          /> */}
         </div>
         
         <div className='flex flex-col lg:flex-row gap-12 mb-16'>
