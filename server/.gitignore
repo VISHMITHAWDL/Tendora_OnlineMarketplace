@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# --- Local Spring Boot config (DO NOT COMMIT SECRETS) ---
+# Ignore real application property files that contain sensitive data.
+src/main/resources/application.properties
+
